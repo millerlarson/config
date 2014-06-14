@@ -1,0 +1,117 @@
+2014-06-13 15:21:40	ribo	:D
+2014-06-13 15:22:15	ribo	yeah, much more shit supported in 0.4
+2014-06-13 15:22:28	invisus_home	I bet.
+2014-06-13 15:22:57	ribo	jenn said my offer came fedex today D:
+2014-06-13 15:24:15	invisus_home	!!
+2014-06-13 15:24:16	invisus_home	Nice man.
+2014-06-13 15:24:18	invisus_home	:)
+2014-06-13 15:24:45	ribo	I think I'm going to wait to resign though, really can't have an insurance gap
+2014-06-13 15:25:00	ribo	start date will be jul 14
+2014-06-13 15:25:23	invisus_home	Well, can't you just put in your...  4 week notice?  :P
+2014-06-13 15:25:27	ribo	haha
+2014-06-13 15:25:38	ribo	well, WA is a "right to work" state, so they could just like
+2014-06-13 15:25:44	ribo	fire me
+2014-06-13 15:25:45	invisus_home	Going to miss you around work though.  True Story.
+2014-06-13 15:25:52	ribo	I know, me too : (
+2014-06-13 15:26:05	invisus_home	Wait...  whut? I though ID was the right to work state and not WA.
+2014-06-13 15:26:08	ribo	but w/e, you'll work there too, it'll happen :D
+2014-06-13 15:26:18	invisus_home	haha
+2014-06-13 15:26:21	invisus_home	We'll see.
+2014-06-13 15:26:32	invisus_home	I'm going to try to talk up my F5 skillets.
+2014-06-13 15:26:51	ribo	hmm maybe it's not a RTW state
+2014-06-13 15:26:53	invisus_home	See if they like the size of the tmos balls.
+2014-06-13 15:27:03	ribo	fo sho
+2014-06-13 15:27:17	invisus_home	Yeah, I don't see WA on the list.
+2014-06-13 15:27:21	invisus_home	Resign away.
+2014-06-13 15:27:26	ribo	lol
+2014-06-13 15:27:55	invisus_home	But the spellcheck.  zomg.
+2014-06-13 15:27:58	invisus_home	So nice.
+2014-06-13 15:28:08	ribo	wat
+2014-06-13 15:28:13	invisus_home	weechat.
+2014-06-13 15:28:15	invisus_home	Spellcheck.
+2014-06-13 15:28:16	ribo	ah
+2014-06-13 15:28:18	ribo	hehe
+2014-06-13 15:28:37	ribo	http://www.lni.wa.gov/WorkplaceRights/ComplainDiscrim/Termination/
+2014-06-13 15:28:39	ribo	hmm
+2014-06-13 15:28:41	invisus_home	Hoping this new version fixes the issues I was having with the windows not refreshing correctly when changing between them.
+2014-06-13 15:28:43	ribo	The law does not require a business to give a worker notice before terminating their job. Nor does the law require workers to give notice before quitting. However, the business may make payment of benefits (such as vacation pay) a condition of the worker giving notice.
+2014-06-13 15:28:52	invisus_home	I kept having to /window refresh or Ctrl+l
+2014-06-13 15:29:22	ribo	probably your terminal settings, is it getting all fucky and misaligned?
+2014-06-13 15:29:32	ribo	terminal and/or screen/tmux
+2014-06-13 15:29:33	invisus_home	Yeah, still do.  But the buffer issues might be because I'm inside tmux.  Not sure.
+2014-06-13 15:29:56	ribo	well, I run it in tmux too
+2014-06-13 15:30:06	invisus_home	But you're you.  Everything works for you.
+2014-06-13 15:30:14	ribo	nah, I had that problem too
+2014-06-13 15:30:17	invisus_home	Unless it's your internets when we're watching GoT.
+2014-06-13 15:30:21	ribo	lol
+2014-06-13 15:30:23	invisus_home	:P
+2014-06-13 15:33:03	invisus_home	Yeah, sometimes misaligned, but often it's just extra line buffer from other window that carries over to the next.
+2014-06-13 15:34:36	ribo	yeah
+2014-06-13 15:35:51	invisus_home	Suggestions?
+2014-06-13 15:36:02	invisus_home	I mean, this version already seems much better.
+2014-06-13 15:36:03	ribo	are you using putty?
+2014-06-13 15:36:06	invisus_home	Which is odd.
+2014-06-13 15:36:10	invisus_home	I'm using a putty clone.
+2014-06-13 15:36:11	invisus_home	Kitty.
+2014-06-13 15:36:15	ribo	yeah, kitty
+2014-06-13 15:37:16	ribo	what's your TERM set to?
+2014-06-13 15:37:35	ribo	(within tmux)
+2014-06-13 15:38:14	invisus_home	miller@vantage ~ $ echo $TERM
+2014-06-13 15:38:14	invisus_home	xterm-256color
+2014-06-13 15:38:28	ribo	there's your problem
+2014-06-13 15:38:42	invisus_home	?
+2014-06-13 15:39:07	ribo	add this line to your ~/.tmux.conf
+2014-06-13 15:39:09	ribo	set -g default-terminal "screen-256color"
+2014-06-13 15:39:35	ribo	and quit weechat/tmux
+2014-06-13 15:39:51	invisus_home	Wait.. wtf, that -is- in my tmux conf.
+2014-06-13 15:40:16	ribo	then remove it from your bashrc 
+2014-06-13 15:40:56	ribo	or zshrc or w/e you use
+2014-06-13 15:41:08	ribo	your actual terminal should be setting that env var
+2014-06-13 15:41:22	ribo	so, tmux opens a new bash, and sets it rong
+2014-06-13 15:41:25	invisus_home	rgr
+2014-06-13 15:41:30	invisus_home	I'll give it a shot.
+2014-06-13 15:41:32	invisus_home	brb
+2014-06-13 15:41:35	--	irc: disconnected from server
+2014-06-13 15:47:23	ribo	yeah, went through the same thing
+2014-06-13 15:47:28	ribo	"hmm did it work...?"
+2014-06-13 15:47:59	invihome	haha
+2014-06-13 15:48:27	invihome	Okay, now that I've gone from screen to tmux, and from irssi to weechat...  I can get back to git.
+2014-06-13 15:48:35	ribo	lol
+2014-06-13 15:48:38	invihome	Only... slightly destracted.
+2014-06-13 15:49:03	ribo	adderall helps you focus, doesn't make sure you choose the best thing to focus on tho :P
+2014-06-13 15:49:19	invihome	For sure.
+2014-06-13 15:49:33	invihome	Summer was down here trying to talk to me while I was messing with stuff.
+2014-06-13 15:49:38	ribo	lol
+2014-06-13 15:49:47	invihome	Got mad and left.  "I was listening to you!"
+2014-06-13 15:49:52	invihome	"NO.  You weren't!"
+2014-06-13 15:49:54	invihome	haha
+2014-06-13 15:49:57	ribo	lol
+2014-06-13 15:50:01	ribo	yeah, jenn will call me here at work
+2014-06-13 15:50:28	ribo	and I'll just not hear a word
+2014-06-13 15:50:36	invihome	haha
+2014-06-13 15:50:37	ribo	because I'm fixed in something else
+2014-06-13 15:50:55	ribo	you'll have to train summer, too
+2014-06-13 15:51:11	invihome	Yeah, I already went upstairs after and had a talk.
+2014-06-13 15:51:14	ribo	jenn doesn't call to ask me to pick up X from safeway anymore
+2014-06-13 15:51:18	invihome	"On meths.  Need time."
+2014-06-13 15:51:28	ribo	she'll text it to me tho
+2014-06-13 15:51:45	invihome	haha, yeah.  I always have summer actually send it somewhere for reference later.
+2014-06-13 15:51:59	invihome	But yeah, weechat is pretty nice.
+2014-06-13 15:52:05	ribo	indeed
+2014-06-13 15:52:10	ribo	I'd suggest the iset plugin too
+2014-06-13 15:52:16	invihome	Even out of the box.
+2014-06-13 15:52:24	ribo	yeah, very nice
+2014-06-13 16:00:14	invihome	herm.
+2014-06-13 16:00:22	invihome	iset installed and loaded... but doesn't appear to pull up menu.
+2014-06-13 16:01:00	invihome	nevermind.
+2014-06-13 16:01:02	invihome	I'm a dolt.
+2014-06-13 16:09:44	ribo	:D
+2014-06-13 16:16:55	invihome	Iset menu is live.
+2014-06-13 16:18:04	invihome	I went to change the color.bg_selected and started going through them after searching for red.  I changed it and "poof"  I was changing other options as changing it made the match disappear.
+2014-06-13 16:43:21	invihome	ls
+2014-06-13 16:43:24	invihome	erps.
+2014-06-13 16:44:40	invihome	ls
+2014-06-13 16:44:42	invihome	damn it.
+2014-06-13 16:44:43	invihome	haha
+2014-06-13 17:40:45	invihome	My understanding of git is so...  weak.
+2014-06-13 17:40:45	--	[ribo] is away: Detached from IRC
