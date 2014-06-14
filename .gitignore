@@ -1,6 +1,7 @@
 # Custom #
 ##########
-weechat/sec.conf
+dotfiles/weechat/sec.conf
+dotfiles/weechat/logs/
 
 # Compiled source #
 ###################
