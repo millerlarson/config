@@ -1,7 +1,11 @@
 # Custom #
 ##########
+# weechat
 dotfiles/weechat/sec.conf
 dotfiles/weechat/logs/
+
+# Vim
+*.swp
 
 # Compiled source #
 ###################
