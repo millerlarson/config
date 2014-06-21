@@ -38,3 +38,8 @@ case "$choice" in
   echo "Bad Choice..."
   ;;
 esac
+
+# remove dot from beginning of filename
+# I plan to use this later for renaming
+# Files placed into config/dotfiles/
+# for i in .*; do echo "${i#.}"; done
