@@ -23,7 +23,7 @@ XX              X   |                           |      |
                                         |       |           XXXX|XX    
                                         +-------+               |
                                                                 |
-                                                Config files  <-+      
+                                                         Git  <-+--->  Config files
 ```
 
 Dotfiles and scripts
