@@ -2,5 +2,5 @@
 	path = tmux-powerline
 	url = git://github.com/erikw/tmux-powerline.git
 [submodule "zsh"]
-	path = dotfiles/oh-my-zsh
+	path = oh-my-zsh
 	url = git://github.com/robbyrussell/oh-my-zsh.git
