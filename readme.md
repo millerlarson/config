@@ -45,7 +45,7 @@ Easily configure:
 * Themes
   * Git aware prompts
 * Modules
-  * Smart*er*\ tab completion
+  * Smart-er tab completion
  
 ### weechat
 It is like irssi but easier!
