@@ -26,7 +26,40 @@ XX              X   |                           |      |
                                                          git  <-+--->  config files
 ```
 
-Dotfiles and scripts
-====================
+# Dotfiles and scripts
 
-**scripts whoo!**
+Simple collection of configs and scripts to help manage configurations that are important to me.
+
+
+## Things to love about...
+
+### zsh
+* Inline man pages with `Esc`+`h`
+* Smarter history search `Ctrl`+`r`
+  * Supports regex `^rm`
+  * Scroll matching commands `<comand>`+`Up/Down`
+* Smart tab completion
+
+#### oh-my-zsh
+Easily configure:
+* Themes
+  * Git aware prompts
+* Modules
+  * Smart_er_ tab completion
+ 
+### weechat
+It is like irssi but easier!
+* Configurable inside the client
+* Plugins
+  * Aspell
+    * In-line spellcheck
+  * Scripts
+    * bufers.pl (server and chatlist buffer)
+    * iset.pl (interactive plugin editor)
+    * screen_away.py (sets away on detach)
+* Buffers
+* Logs
+* Colors
+
+### tmux
+Like screen? Try tmux. Period.
