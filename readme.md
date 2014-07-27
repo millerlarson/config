@@ -29,6 +29,8 @@ It is like irssi but easier!
     * bufers.pl (server and chatlist buffer)
     * iset.pl (interactive plugin editor)
     * screen_away.py (sets away on detach)
+  * Filters
+    * irc_smart_filter
 * Buffers
 * Logs
 * Colors
