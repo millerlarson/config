@@ -90,4 +90,5 @@ LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
 
 unalias ls
-alias ls='ls -F --color --group-directories'
+#alias ls='ls -F --color --group-directories'
+source ~/.bash_aliases
