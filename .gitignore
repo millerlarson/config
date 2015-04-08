@@ -44,3 +44,4 @@ dotfiles/weechat/logs/
 .Trashes
 ehthumbs.db
 Thumbs.db
+gtk*
