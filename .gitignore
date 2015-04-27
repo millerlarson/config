@@ -4,6 +4,9 @@
 dotfiles/weechat/sec.conf
 dotfiles/weechat/logs/
 
+# Oh-myzsh
+dotfiles/zsh-update
+
 # Vim
 *.swp
 
