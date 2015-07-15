@@ -49,7 +49,11 @@ export UPDATE_ZSH_DAYS=13
 # HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
+if [[ $(uname) == Linux ]]; then
+ZSH_CUSTOM=$HOME/config/oh-my-zsh-custom/
+else
 ZSH_CUSTOM=$HOME/.config/oh-my-zsh-custom/
+fi
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -98,5 +102,7 @@ export LESS_TERMCAP_ue=$'\E[0m'          # end underline
 
 
 unalias ls
-#alias ls='ls -F --color --group-directories'
 source ~/.bash_aliases
+if [[ $(uname) == Linux ]]; then
+  alias ls='ls -F --color --group-directories'
+fi
