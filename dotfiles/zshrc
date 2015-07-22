@@ -106,3 +106,5 @@ source ~/.bash_aliases
 if [[ $(uname) == Linux ]]; then
   alias ls='ls -F --color --group-directories'
 fi
+
+haste() { a=$(cat); curl -X POST -s -d "$a" http://hastebin.es.f5net.com/documents | awk -F '"' '{print "http://hastebin.es.f5net.com/"$4}'; }
