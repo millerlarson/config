@@ -69,11 +69,7 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/g
 export MANPATH="/usr/local/man:$MANPATH"
 
 # Bash-like Ctrl+u (clears line to the left of cursor)
-<<<<<<< HEAD
-# bindkey \^U backward-kill-line
-=======
 bindkey \^U backward-kill-line
->>>>>>> 9463aaa940560a9dfb187e3ba26ce97d07a3f3ce
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
