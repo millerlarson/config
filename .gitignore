@@ -49,3 +49,4 @@ dotfiles/zsh-update
 ehthumbs.db
 Thumbs.db
 gtk*
+dotfiles/weechat/slack.cache
