@@ -65,8 +65,11 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:$HOME/bin"
 export MANPATH="/usr/local/man:$MANPATH"
+
+# Bash-like Ctrl+u (clears line to the left of cursor)
+bindkey \^U backward-kill-line
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
