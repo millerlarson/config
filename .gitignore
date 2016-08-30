@@ -3,6 +3,7 @@
 # weechat
 dotfiles/weechat/sec.conf
 dotfiles/weechat/logs/
+dotfiles/weechat/slack.cache
 
 # Oh-myzsh
 dotfiles/zsh-update
