@@ -1,2 +1,2 @@
 alias brews='brew list -1'
-alias bubu="brew update -v && read && brew upgrade --all && brew cleanup"
+alias bubu="brew update -v && echo 'Brew Updated...' && read && brew upgrade && brew cleanup"
