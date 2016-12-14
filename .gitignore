@@ -7,6 +7,7 @@ dotfiles/weechat/slack.cache
 
 # Oh-myzsh
 dotfiles/zsh-update
+oh-my-zsh
 
 # Vim
 *.swp
@@ -49,4 +50,3 @@ dotfiles/zsh-update
 ehthumbs.db
 Thumbs.db
 gtk*
-dotfiles/weechat/slack.cache
