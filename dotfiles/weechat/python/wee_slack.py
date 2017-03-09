@@ -2081,8 +2081,7 @@ def process_channel_created(message_json, eventrouter, **kwargs):
     item = message_json["channel"]
     c = SlackChannel(eventrouter, team=kwargs["team"], **item)
     kwargs['team'].channels[item["id"]] = c
-    #print eventrouter.teams['d80c2b6c3127dbb1991917394ed219e8212a2606'].channels['C3ZM2GMGU'].team.domain
-    #raise
+    kwargs['team'].buffer_prnt('Channel created: {}'.format(c.slack_name))
 
 def process_channel_rename(message_json, eventrouter, **kwargs):
     item = message_json["channel"]
@@ -2094,6 +2093,7 @@ def process_im_created(message_json, eventrouter, **kwargs):
     item = message_json["channel"]
     c = SlackDMChannel(eventrouter, team=team, users=team.users, **item)
     team.channels[item["id"]] = c
+    kwargs['team'].buffer_prnt('IM channel created: {}'.format(c.name))
 
 def process_im_open(message_json, eventrouter, **kwargs):
     channel = kwargs['channel']
@@ -2105,6 +2105,15 @@ def process_im_close(message_json, eventrouter, **kwargs):
     item = message_json
     cbuf = kwargs['team'].channels[item["channel"]].channel_buffer
     eventrouter.weechat_controller.unregister_buffer(cbuf, False, True)
+
+def process_group_joined(message_json, eventrouter, **kwargs):
+    item = message_json["channel"]
+    if item["name"].startswith("mpdm-"):
+        c = SlackMPDMChannel(eventrouter, team=kwargs["team"], **item)
+    else:
+        c = SlackGroupChannel(eventrouter, team=kwargs["team"], **item)
+    kwargs['team'].channels[item["id"]] = c
+    kwargs['team'].channels[item["id"]].open()
 
 def process_reaction_added(message_json, eventrouter, **kwargs):
     channel = kwargs['team'].channels[message_json["item"]["channel"]]
@@ -2647,6 +2656,49 @@ def command_nodistractions(data, current_buffer, args):
 #                save_distracting_channels()
 
 @slack_buffer_required
+def command_upload(data, current_buffer, args):
+    channel = EVENTROUTER.weechat_controller.buffers.get(current_buffer)
+    url = 'https://slack.com/api/files.upload'
+    fname = args.split(' ', 1)
+    file_path = os.path.expanduser(fname[1])
+    team = EVENTROUTER.weechat_controller.buffers[current_buffer].team
+    if ' ' in file_path:
+        file_path = file_path.replace(' ', '\ ')
+
+    command = 'curl -F file=@{} -F channels={} -F token={} {}'.format(file_path, channel.identifier, team.token, url)
+    w.hook_process(command, config.slack_timeout, '', '')
+
+def away_command_cb(data, current_buffer, args):
+    #TODO: reimplement all.. maybe
+    (all, message) = re.match("^/away(?:\s+(-all))?(?:\s+(.+))?", args).groups()
+    if message is None:
+        command_back(data, current_buffer, args)
+    else:
+        command_away(data, current_buffer, args)
+    return w.WEECHAT_RC_OK
+
+@slack_buffer_required
+def command_away(data, current_buffer, args):
+    """
+    Sets your status as 'away'
+    /slack away
+    """
+    team = EVENTROUTER.weechat_controller.buffers[current_buffer].team
+    s = SlackRequest(team.token, "presence.set", {"presence": "away"}, team_hash=team.team_hash)
+    EVENTROUTER.receive(s)
+
+
+@slack_buffer_required
+def command_back(data, current_buffer, args):
+    """
+    Sets your status as 'back'
+    /slack back
+    """
+    team = EVENTROUTER.weechat_controller.buffers[current_buffer].team
+    s = SlackRequest(team.token, "presence.set", {"presence": "active"}, team_hash=team.team_hash)
+    EVENTROUTER.receive(s)
+
+@slack_buffer_required
 def label_command_cb(data, current_buffer, args):
     channel = EVENTROUTER.weechat_controller.buffers.get(current_buffer)
     if channel and channel.type == 'thread':
@@ -2750,12 +2802,12 @@ def setup_hooks():
     w.hook_command_run('/msg', 'msg_command_cb', '')
     w.hook_command_run('/label', 'label_command_cb', '')
     w.hook_command_run("/input complete_next", "complete_next_cb", "")
+    w.hook_command_run('/away', 'away_command_cb', '')
 
     w.hook_completion("nicks", "complete @-nicks for slack", "nick_completion_cb", "")
     w.hook_completion("emoji", "complete :emoji: for slack", "emoji_completion_cb", "")
 
     # Hooks to fix/implement
-    #w.hook_command_run('/away', 'away_command_cb', '')
     #w.hook_timer(1000 * 60 * 5, 0, 0, "cache_write_cb", "")
     #w.hook_signal('buffer_opened', "buffer_opened_cb", "")
     #w.hook_signal('window_scrolled', "scrolled_cb", "")
