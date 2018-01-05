@@ -53,7 +53,11 @@ SLACK_API_TRANSLATOR = {
     },
     "mpim": {
         "history": "mpim.history",
+<<<<<<< f3670e08b28644cde6cf75fdd52c17aec36d9199
         "join": "conversations.open",
+=======
+        "join": "mpim.open",  # conversations.open lacks unread_count_display
+>>>>>>> weechat 2.0.1
         "leave": "conversations.close",
         "mark": "mpim.mark",
         "info": "groups.info",
@@ -644,7 +648,11 @@ def buffer_input_callback(signal, buffer_ptr, data):
     if not channel:
         return w.WEECHAT_RC_ERROR
 
+<<<<<<< f3670e08b28644cde6cf75fdd52c17aec36d9199
     reaction = re.match("^\s*(\d*)(\+|-):(.*):\s*$", data)
+=======
+    reaction = re.match("^(\d*)(\+|-):(.*):\s*$", data)
+>>>>>>> weechat 2.0.1
     substitute = re.match("^(\d*)s/", data)
     if reaction:
         if reaction.group(2) == "+":
@@ -664,6 +672,8 @@ def buffer_input_callback(signal, buffer_ptr, data):
             old = old.replace(r'\/', '/')
             channel.edit_nth_previous_message(msgno, old, new, flags)
     else:
+        if data.startswith(('//', ' ')):
+            data = data[1:]
         channel.send_message(data)
         # this is probably wrong channel.mark_read(update_remote=True, force=True)
     return w.WEECHAT_RC_OK
@@ -1024,7 +1034,10 @@ class SlackTeam(object):
             w.buffer_set(self.channel_buffer, "localvar_set_server", self.preferred_name)
             if w.config_string(w.config_get('irc.look.server_buffer')) == 'merge_with_core':
                 w.buffer_merge(self.channel_buffer, w.buffer_search_main())
+<<<<<<< f3670e08b28644cde6cf75fdd52c17aec36d9199
             w.buffer_set(self.channel_buffer, "nicklist", "1")
+=======
+>>>>>>> weechat 2.0.1
 
     def set_muted_channels(self, muted_str):
         self.muted_channels = {x for x in muted_str.split(',')}
@@ -1193,6 +1206,12 @@ class SlackChannel(object):
                 return True
         return False
 
+<<<<<<< f3670e08b28644cde6cf75fdd52c17aec36d9199
+=======
+    def get_members(self):
+        return self.members
+
+>>>>>>> weechat 2.0.1
     def set_unread_count_display(self, count):
         self.unread_count_display = count
         self.new_messages = bool(self.unread_count_display)
@@ -1245,13 +1264,12 @@ class SlackChannel(object):
         # self.create_buffer()
 
     def check_should_open(self, force=False):
-        try:
-            if self.is_archived:
-                return
-        except:
-            pass
+        if hasattr(self, "is_archived") and self.is_archived:
+            return
+
         if force:
             self.create_buffer()
+<<<<<<< f3670e08b28644cde6cf75fdd52c17aec36d9199
         else:
             for reason in ["is_member", "is_open", "unread_count_display"]:
                 try:
@@ -1261,6 +1279,17 @@ class SlackChannel(object):
                             self.get_history(slow_queue=True)
                 except:
                     pass
+=======
+            return
+
+        # Only check is_member if is_open is not set, because in some cases
+        # (e.g. group DMs), is_member should be ignored in favor of is_open.
+        is_open = self.is_open if hasattr(self, "is_open") else self.is_member
+        if is_open or self.unread_count_display:
+            self.create_buffer()
+            if config.background_load_all_history:
+                self.get_history(slow_queue=True)
+>>>>>>> weechat 2.0.1
 
     def set_related_server(self, team):
         self.team = team
@@ -1268,7 +1297,7 @@ class SlackChannel(object):
     def set_highlights(self):
         # highlight my own name and any set highlights
         if self.channel_buffer:
-            highlights = self.team.highlight_words.union({'@' + self.team.nick, "!here", "!channel", "!everyone"})
+            highlights = self.team.highlight_words.union({'@' + self.team.nick, self.team.myidentifier, "!here", "!channel", "!everyone"})
             h_str = ",".join(highlights)
             w.buffer_set(self.channel_buffer, "highlight_words", h_str)
 
@@ -1515,7 +1544,7 @@ class SlackChannel(object):
     def update_nicklist(self, user=None):
         if not self.channel_buffer:
             return
-        if self.type not in ["channel", "group"]:
+        if self.type not in ["channel", "group", "mpim"]:
             return
         w.buffer_set(self.channel_buffer, "nicklist", "1")
         # create nicklists for the current channel if they don't exist
@@ -1603,6 +1632,12 @@ class SlackDMChannel(SlackChannel):
     def set_name(self, slack_name):
         self.name = slack_name
 
+<<<<<<< f3670e08b28644cde6cf75fdd52c17aec36d9199
+=======
+    def get_members(self):
+        return {self.user}
+
+>>>>>>> weechat 2.0.1
     def create_buffer(self):
         if not self.channel_buffer:
             super(SlackDMChannel, self).create_buffer()
@@ -1689,13 +1724,23 @@ class SlackMPDMChannel(SlackChannel):
         self.set_name(n)
         self.type = "mpim"
 
+<<<<<<< f3670e08b28644cde6cf75fdd52c17aec36d9199
     def open(self, update_remote=False):
+=======
+    def open(self, update_remote=True):
+>>>>>>> weechat 2.0.1
         self.create_buffer()
         self.active = True
         self.get_history()
         if "info" in SLACK_API_TRANSLATOR[self.type]:
             s = SlackRequest(self.team.token, SLACK_API_TRANSLATOR[self.type]["info"], {"channel": self.identifier}, team_hash=self.team.team_hash, channel_identifier=self.identifier)
             self.eventrouter.receive(s)
+<<<<<<< f3670e08b28644cde6cf75fdd52c17aec36d9199
+=======
+        if update_remote and 'join' in SLACK_API_TRANSLATOR[self.type]:
+            s = SlackRequest(self.team.token, SLACK_API_TRANSLATOR[self.type]['join'], {'users': ','.join(self.members)}, team_hash=self.team.team_hash, channel_identifier=self.identifier)
+            self.eventrouter.receive(s)
+>>>>>>> weechat 2.0.1
         # self.create_buffer()
 
     @staticmethod
@@ -2079,6 +2124,7 @@ def handle_rtmstart(login_data, eventrouter):
     This handles the main entry call to slack, rtm.start
     """
     metadata = pickle.loads(login_data["wee_slack_request_metadata"])
+<<<<<<< f3670e08b28644cde6cf75fdd52c17aec36d9199
 
     if not login_data["ok"]:
         w.prnt("", "ERROR: Failed connecting to Slack with token {}: {}"
@@ -2161,6 +2207,98 @@ def handle_conversationsopen(conversation_json, eventrouter, **kwargs):
     conversation = team.channels[request_metadata.channel_identifier]
     unread_count_display = conversation_json['channel']['unread_count_display']
     conversation.set_unread_count_display(unread_count_display)
+=======
+
+    if not login_data["ok"]:
+        w.prnt("", "ERROR: Failed connecting to Slack with token {}: {}"
+            .format(metadata.token, login_data["error"]))
+        return
+
+    # Let's reuse a team if we have it already.
+    th = SlackTeam.generate_team_hash(login_data['self']['name'], login_data['team']['domain'])
+    if not eventrouter.teams.get(th):
+
+        users = {}
+        for item in login_data["users"]:
+            users[item["id"]] = SlackUser(**item)
+
+        bots = {}
+        for item in login_data["bots"]:
+            bots[item["id"]] = SlackBot(**item)
+
+        channels = {}
+        for item in login_data["channels"]:
+            channels[item["id"]] = SlackChannel(eventrouter, **item)
+
+        for item in login_data["ims"]:
+            channels[item["id"]] = SlackDMChannel(eventrouter, users, **item)
+
+        for item in login_data["groups"]:
+            if item["name"].startswith('mpdm-'):
+                channels[item["id"]] = SlackMPDMChannel(eventrouter, **item)
+            else:
+                channels[item["id"]] = SlackGroupChannel(eventrouter, **item)
+
+        t = SlackTeam(
+            eventrouter,
+            metadata.token,
+            login_data['url'],
+            login_data["team"]["domain"],
+            login_data["self"]["name"],
+            login_data["self"]["id"],
+            users,
+            bots,
+            channels,
+            muted_channels=login_data["self"]["prefs"]["muted_channels"],
+            highlight_words=login_data["self"]["prefs"]["highlight_words"],
+        )
+        eventrouter.register_team(t)
+
+    else:
+        t = eventrouter.teams.get(th)
+        t.set_reconnect_url(login_data['url'])
+        t.connect()
+
+    t.buffer_prnt('Connected to Slack')
+    t.buffer_prnt('{:<20} {}'.format("Websocket URL", login_data["url"]))
+    t.buffer_prnt('{:<20} {}'.format("User name", login_data["self"]["name"]))
+    t.buffer_prnt('{:<20} {}'.format("User ID", login_data["self"]["id"]))
+    t.buffer_prnt('{:<20} {}'.format("Team name", login_data["team"]["name"]))
+    t.buffer_prnt('{:<20} {}'.format("Team domain", login_data["team"]["domain"]))
+    t.buffer_prnt('{:<20} {}'.format("Team id", login_data["team"]["id"]))
+
+    dbg("connected to {}".format(t.domain))
+
+def handle_channelsinfo(channel_json, eventrouter, **kwargs):
+    request_metadata = pickle.loads(channel_json["wee_slack_request_metadata"])
+    team = eventrouter.teams[request_metadata.team_hash]
+    channel = team.channels[request_metadata.channel_identifier]
+    unread_count_display = channel_json['channel']['unread_count_display']
+    channel.set_unread_count_display(unread_count_display)
+
+def handle_groupsinfo(group_json, eventrouter, **kwargs):
+    request_metadata = pickle.loads(group_json["wee_slack_request_metadata"])
+    team = eventrouter.teams[request_metadata.team_hash]
+    group = team.channels[request_metadata.channel_identifier]
+    unread_count_display = group_json['group']['unread_count_display']
+    group_id = group_json['group']['id']
+    group.set_unread_count_display(unread_count_display)
+
+def handle_conversationsopen(conversation_json, eventrouter, object_name='channel', **kwargs):
+    request_metadata = pickle.loads(conversation_json["wee_slack_request_metadata"])
+    # Set unread count if the channel isn't new (channel_identifier exists)
+    if hasattr(request_metadata, 'channel_identifier'):
+        channel_id = request_metadata.channel_identifier
+        team = eventrouter.teams[request_metadata.team_hash]
+        conversation = team.channels[channel_id]
+        unread_count_display = conversation_json[object_name]['unread_count_display']
+        conversation.set_unread_count_display(unread_count_display)
+
+
+def handle_mpimopen(mpim_json, eventrouter, object_name='group', **kwargs):
+    handle_conversationsopen(mpim_json, eventrouter, object_name, **kwargs)
+
+>>>>>>> weechat 2.0.1
 
 def handle_groupshistory(message_json, eventrouter, **kwargs):
     handle_history(message_json, eventrouter, **kwargs)
@@ -2982,13 +3120,14 @@ def command_users(data, current_buffer, args):
 @utf8_decode
 def command_talk(data, current_buffer, args):
     """
-    Open a chat with the specified user
-    /slack talk [user]
+    Open a chat with the specified user(s)
+    /slack talk <user>[,<user2>[,<user3>...]]
     """
 
     e = EVENTROUTER
     team = e.weechat_controller.buffers[current_buffer].team
     channel_name = args.split(' ')[1]
+<<<<<<< f3670e08b28644cde6cf75fdd52c17aec36d9199
     c = team.get_channel_map()
     if channel_name not in c:
         u = team.get_username_map()
@@ -3003,6 +3142,47 @@ def command_talk(data, current_buffer, args):
         channel_name = channel_name[1:]
     if channel_name in c:
         chan = team.channels[c[channel_name]]
+=======
+
+    if channel_name.startswith('#'):
+        channel_name = channel_name[1:]
+
+    # Try finding the channel by name
+    chan = team.channels.get(team.get_channel_map().get(channel_name))
+
+    # If the channel doesn't exist, try finding a DM or MPDM instead
+    if not chan:
+        # Get the IDs of the users
+        u = team.get_username_map()
+        users = set()
+        for user in channel_name.split(','):
+            if user.startswith('@'):
+                user = user[1:]
+            if user in u:
+                users.add(u[user])
+
+        if users:
+            if len(users) > 1:
+                channel_type = 'mpim'
+                # Add the current user since MPDMs include them as a member
+                users.add(team.myidentifier)
+            else:
+                channel_type = 'im'
+
+            # Try finding the channel by type and members
+            for channel in team.channels.itervalues():
+                if (channel.type == channel_type and
+                        channel.get_members() == users):
+                    chan = channel
+                    break
+
+            # If the DM or MPDM doesn't exist, create it
+            if not chan:
+                s = SlackRequest(team.token, SLACK_API_TRANSLATOR[channel_type]['join'], {'users': ','.join(users)}, team_hash=team.team_hash)
+                EVENTROUTER.receive(s)
+
+    if chan:
+>>>>>>> weechat 2.0.1
         chan.open()
         if config.switch_buffer_on_join:
             w.buffer_set(chan.channel_buffer, "display", "1")
@@ -3332,7 +3512,8 @@ def setup_hooks():
     w.hook_signal('buffer_switch', "buffer_switch_callback", "EVENTROUTER")
     w.hook_signal('window_switch', "buffer_switch_callback", "EVENTROUTER")
     w.hook_signal('quit', "quit_notification_cb", "")
-    w.hook_signal('input_text_changed', "typing_notification_cb", "")
+    if config.send_typing_notice:
+        w.hook_signal('input_text_changed', "typing_notification_cb", "")
 
     w.hook_command(
         # Command name and description
@@ -3455,6 +3636,13 @@ class PluginConfig(object):
             default='italic',
             desc='When receiving bold text from Slack, render it as this in weechat.'
             ' If your terminal lacks italic support, consider using "underline" instead.'),
+<<<<<<< f3670e08b28644cde6cf75fdd52c17aec36d9199
+=======
+        'send_typing_notice': Setting(
+            default='true',
+            desc='Alert Slack users when you are typing a message in the input bar '
+            '(Requires reload)'),
+>>>>>>> weechat 2.0.1
         'server_aliases': Setting(
             default='',
             desc='A comma separated list of `subdomain:alias` pairs. The alias'
